@@ -4,19 +4,34 @@ import (
 	"time"
 )
 
+// CortexAgent represents a Cortex Agent in Snowflake.
 type CortexAgent struct {
-	Owner         *string                  `json:"owner,omitempty"`
-	DatabaseName  *string                  `json:"database_name,omitempty"`
-	SchemaName    *string                  `json:"schema_name,omitempty"`
-	Name          *string                  `json:"name"`
-	Comment       *string                  `json:"comment,omitempty"`
-	Profile       *AgentProfile            `json:"profile,omitempty"`
-	Models        *ModelConfig             `json:"models,omitempty"`
-	Instructions  *AgentInstructions       `json:"instructions,omitempty"`
-	Orchestration *OrchestrationConfig     `json:"orchestration,omitempty"`
-	Tools         []*Tool                  `json:"tools,omitempty"`
+	// The owner of the agent.
+	Owner *string `json:"owner,omitempty"`
+	// The database name where the agent is located.
+	DatabaseName *string `json:"database_name,omitempty"`
+	// The schema name where the agent is located.
+	SchemaName *string `json:"schema_name,omitempty"`
+	// The name of the agent.
+	Name *string `json:"name"`
+	// The comment or description for the agent.
+	Comment *string `json:"comment,omitempty"`
+	// Profile information for the agent.
+	Profile *AgentProfile `json:"profile,omitempty"`
+	// Model to use for orchestration. If not provided, a model is automatically selected.
+	Models *ModelConfig `json:"models,omitempty"`
+	// AgentInstructions contains the various instruction types for the agent.
+	Instructions *AgentInstructions `json:"instructions,omitempty"`
+	// Orchestration configuration for the agent - currently only budget is supported.
+	Orchestration *OrchestrationConfig `json:"orchestration,omitempty"`
+	// List of tools available to the agent.
+	Tools []*Tool `json:"tools,omitempty"`
+	// Configuration for each tool used by the agent.
 	ToolResources map[string]*ToolResource `json:"tool_resources,omitempty"`
-	CreatedOn     time.Time                `json:"created_on,omitempty"`
+	// Complete YAML specification for the agent.
+	AgentSpec *string `json:"agent_spec,omitempty"`
+	// Timestamp when the agent was created.
+	CreatedOn time.Time `json:"created_on,omitempty"`
 }
 
 func (ca CortexAgent) String() string {
