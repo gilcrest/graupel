@@ -37,22 +37,16 @@ func main() {
 
 	// List all Cortex Agents
 	var (
-		agents []*graupel.CortexAgent
-		resp   *http.Response
+		agent *graupel.CortexAgent
+		resp  *http.Response
 	)
-	agents, resp, err = client.Agents.List(ctx, "snowflake_intelligence", "agents")
+	agent, resp, err = client.Agents.Describe(ctx, "snowflake_intelligence", "agents", "agent-123456")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, agent := range agents {
-		fmt.Printf("Agent: %+v\n", agent)
-		fmt.Println(agent)
-	}
-
-	fmt.Printf("Agent Count: %d\n", len(agents))
 	fmt.Printf("HTTP Response: %+v\n", resp)
-
+	fmt.Printf("Cortex Agent: %+v\n", agent)
 }
 
 //type authTransport struct {
