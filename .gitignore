@@ -34,3 +34,6 @@ tasks.json
 
 # IntelliJ Goland directory and files
 .idea/
+
+# dotenv files
+*.env
