@@ -46,7 +46,8 @@ func main() {
 	}
 
 	for _, agent := range agents {
-		fmt.Printf("Agent: %s\n", *agent.Name)
+		fmt.Printf("Agent: %+v\n", agent)
+		fmt.Println(agent)
 	}
 
 	fmt.Printf("Agent Count: %d\n", len(agents))

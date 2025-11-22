@@ -19,6 +19,10 @@ type CortexAgent struct {
 	CreatedOn     time.Time                `json:"created_on,omitempty"`
 }
 
+func (ca CortexAgent) String() string {
+	return Stringify(ca)
+}
+
 // AgentInstructions contains the various instruction types for the agent.
 type AgentInstructions struct {
 	// Instructions for response generation.
@@ -29,10 +33,18 @@ type AgentInstructions struct {
 	System *string `json:"system,omitempty"`
 }
 
+func (ai AgentInstructions) String() string {
+	return Stringify(ai)
+}
+
 // AgentProfile is profile information for a Data Cortex agent.
 type AgentProfile struct {
 	// Display name for the agent.
 	DisplayName *string `json:"display_name,omitempty"`
+}
+
+func (ap AgentProfile) String() string {
+	return Stringify(ap)
 }
 
 // BudgetConfig specifies time and token budgets for agent operations.
@@ -41,6 +53,10 @@ type BudgetConfig struct {
 	Seconds *int `json:"seconds,omitempty"`
 	// Token budget.
 	Tokens *int `json:"tokens,omitempty"`
+}
+
+func (bc BudgetConfig) String() string {
+	return Stringify(bc)
 }
 
 // ExecutionEnvironment  is the configuration for server-executed tools.
@@ -53,10 +69,18 @@ type ExecutionEnvironment struct {
 	QueryTimeout *int `json:"query_timeout,omitempty"` // Query timeout in seconds
 }
 
+func (ee ExecutionEnvironment) String() string {
+	return Stringify(ee)
+}
+
 // ModelConfig specifies the models used by the agent.
 type ModelConfig struct {
 	// Model to use for orchestration. If not provided, a model is automatically selected.
 	Orchestration *string `json:"orchestration,omitempty"`
+}
+
+func (mc ModelConfig) String() string {
+	return Stringify(mc)
 }
 
 type OrchestrationConfig struct {
@@ -64,10 +88,18 @@ type OrchestrationConfig struct {
 	Budget *BudgetConfig `json:"budget,omitempty"`
 }
 
+func (oc OrchestrationConfig) String() string {
+	return Stringify(oc)
+}
+
 // Tool defines a tool that can be used by the agent. Tools provide specific
 // capabilities like data analysis, search, or generic functions.
 type Tool struct {
 	ToolSpec *ToolSpec `json:"tool_spec,omitempty"`
+}
+
+func (t Tool) String() string {
+	return Stringify(t)
 }
 
 // ToolInputSchema represents the schema for tool inputs.
@@ -84,6 +116,10 @@ type ToolInputSchema struct {
 	Required []string `json:"required,omitempty"`
 }
 
+func (tis ToolInputSchema) String() string {
+	return Stringify(tis)
+}
+
 type ToolResource interface {
 	toolResourceName() string
 }
@@ -97,7 +133,11 @@ type CortexAnalystTextToSQLToolResource struct {
 	ExecutionEnvironment *ExecutionEnvironment `json:"execution_environment,omitempty"` // Configuration for how to execute the generated SQL query.
 }
 
-func (t *CortexAnalystTextToSQLToolResource) toolResourceName() string {
+func (cattstr CortexAnalystTextToSQLToolResource) String() string {
+	return Stringify(cattstr)
+}
+
+func (cattstr CortexAnalystTextToSQLToolResource) toolResourceName() string {
 	return "cortex_analyst_text_to_sql"
 }
 
@@ -114,7 +154,11 @@ type CortexSearchToolResource struct {
 	Filter map[string]map[string]string `json:"filter"`
 }
 
-func (t *CortexSearchToolResource) toolResourceName() string {
+func (cstr CortexSearchToolResource) String() string {
+	return Stringify(cstr)
+}
+
+func (cstr CortexSearchToolResource) toolResourceName() string {
 	return "cortex_search"
 }
 
@@ -125,7 +169,11 @@ type GenericToolResource struct {
 	Identifier           *string               `json:"identifier,omitempty"`
 }
 
-func (t *GenericToolResource) toolResourceName() string {
+func (gtr GenericToolResource) String() string {
+	return Stringify(gtr)
+}
+
+func (gtr GenericToolResource) toolResourceName() string {
 	return "generic"
 }
 
@@ -142,4 +190,8 @@ type ToolSpec struct {
 	// for when generating the input for ToolUses. Required for generic tools
 	// to specify their input parameters.
 	InputSchema *ToolInputSchema `json:"input_schema"`
+}
+
+func (ts ToolSpec) String() string {
+	return Stringify(ts)
 }
