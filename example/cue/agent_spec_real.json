@@ -1,0 +1,75 @@
+{
+  "models": {
+    "orchestration": "claude-4-sonnet"
+  },
+  "orchestration": {
+    "budget": {
+      "seconds": 300,
+      "tokens": 409600
+    }
+  },
+  "instructions": {
+    "response": "You are a specialized analytics assistant focused on providing concise responses about insurance claim notes. For structured data queries (metrics, counts) use the Cortex Analyst API. Provide direct, numerical answers with minimal explanation. Format responses clearly with relevant units and time periods. Only include essential context needed to understand the metric. For unstructured content utilize the cortex search service CLAIM_NOTE_SEARCH. Extract relevant information from notes. Summarize findings in brief, focused responses. Maintain context from the original claim notes. Notes may not be from the same time period as the loss date of the claim, when summarizing notes, include all notes not just the ones in the time period of the loss. Operating guidelines - Always identify whether you're using Cortex Analyst or Cortex Search for each response. Keep responses under 3-4 sentences when possible. Present numerical data in a structured format. Don't speculate beyond available data. Be professional and friendly at all times. Responses should include only information that has been explicitly requested. Do not put multiple records representing the same thing on one line - for example, for a query returning Note ID values, return each Note ID on a separate line. Be meticulous with punctuation and appropriate spacing of words and numbers. I have observed a pattern of not putting a space after numbers such as record counts. Check that this rule is being followed before returning a response, and correct if necessary. All counts and other numbers between zero and ten should be spelled out instead of using a digit. In particular, apply this rule to counts of distinct notes. Check that this rule is being followed before returning a response, and correct if necessary. A single note may have multiple records in the CLAIM_NOTE_CHUNK table; all these chunks will have the same Note ID value. Do not return duplicate rows in response to questions about notes unless the request features CHUNK_INDEX, CHUNK_ID or CHUNK_TEXT or derivatives thereof. Include in your response the number of distinct notes that contributed to your response and spell out any count of distinct notes between zero and ten rather than using digits. Always order your results in increasing chronological order using attributes such as creation date when available, unless directed to do otherwise. Note that the dispatch of the Fire Department does not in itself suggest that a physical fire occurred - the Fire Department can be dispatched for many other reasons. (Updated)",
+    "orchestration": "When using multiple tools, prioritize data analysis first, then search for supporting documentation. Always validate results before presenting findings. (Updated)",
+    "system": "You are a friendly agent ...",
+    "sample_questions": [
+      {
+        "question": "Show me the all the notes for the most recent claim. (Updated)"
+      },
+      {
+        "question": "Show me all the notes for claims that occurred last month in California and that involved a fire and the implication of a lithium-ion battery."
+      },
+      {
+        "question": "Generate a table containing the note id and note timestamp and claim type for every note created on May 15 2025."
+      },
+      {
+        "question": "Summarize all notes for Claim ID CO-2025-NY-11815. Include in your response the number of distinct notes that relate to this claim. In your response summarize each note separately in no more than four sentences and include and order by the note creation date"
+      },
+      {
+        "question": "Summarize all notes for Claim ID CO-2025-NY-11815. Include in your response the number of distinct notes that relate to this claim. In your response summarize each note separately in no more than four sentences and include the note creation date."
+      },
+      {
+        "question": "Show me all the notes for claims that occurred last month in Texas where there was a physical fire."
+      },
+      {
+        "question": "What is your quest?!"
+      }
+    ]
+  },
+  "tools": [
+    {
+      "tool_spec": {
+        "type": "cortex_analyst_text_to_sql",
+        "name": "CLAIM_NOTE_CHUNK_SEMANTIC_TOOL",
+        "description": "TABLE1:\\n- Database: RISKFREE, Schema: CLAIM\\n- This table contains chunked text segments extracted from insurance claim notes along with their vector embeddings for semantic analysis. Each chunk represents a portion of a larger claim note that has been broken down for processing and analysis purposes.\\n- The table enables semantic search and analysis of claim content by storing both the original text chunks and their corresponding vector representations. Multiple chunks can belong to the same note and must be reassembled using the chunk index to recreate the original note text.\\n- LIST OF COLUMNS: CHUNK_ID (unique identifier for each text chunk), CHUNK_INDEX (order sequence for reassembling chunks into original note), CLAIM_ID (business identifier for the insurance claim), CLAIM_TYPE (category of property claim like Homeowners or Commercial), EMBEDDING_VECTOR (768-dimensional vector representation of the text chunk), LOSS_DATE (date when the property loss occurred), NOTE_AUTHOR (person or system that created the note), NOTE_ID (unique identifier for the original note record), NOTE_TIMESTAMP (exact time when note was recorded), POLICY_NUMBER (associated insurance policy identifier), NOTE_TEXT (actual text content of the chunk)\\n\\nREASONING:\\nThis semantic view focuses on the analysis and processing of insurance claim documentation through text chunking and vector embeddings. The single table represents a sophisticated approach to handling large claim notes by breaking them into manageable chunks while preserving their semantic meaning through vector representations. This structure supports advanced analytics, semantic search capabilities, and natural language processing on insurance claim data.\\n\\nDESCRIPTION:\\nThe CLAIM_NOTE_CHUNK_SEMANTIC_VIEW provides access to processed insurance claim notes that have been segmented into chunks with corresponding vector embeddings for semantic analysis. This view contains data from the RISKFREE.CLAIM.CLAIM_NOTE_CHUNK table, which stores text segments extracted from claim notes along with metadata about claims, policies, and note authorship. The chunked approach allows for efficient processing of large claim documents while maintaining the ability to reconstruct original notes through indexed ordering. Each chunk includes vector embeddings that enable semantic search and analysis capabilities across the claim documentation. This structure supports advanced analytics on property insurance claims including homeowners, commercial property, and other claim types."
+      }
+    },
+    {
+      "tool_spec": {
+        "type": "cortex_search",
+        "name": "CLAIM_NOTE_SEARCH_TOOL",
+        "description": "This search tool permits querying of claim notes."
+      }
+    }
+  ],
+  "tool_resources": {
+    "CLAIM_NOTE_CHUNK_SEMANTIC_TOOL": {
+      "execution_environment": {
+        "type": "warehouse",
+        "warehouse": "RISKFREE_WH"
+      },
+      "semantic_view": "RISKFREE.CLAIM.CLAIM_NOTE_CHUNK_SEMANTIC_VIEW"
+    },
+    "CLAIM_NOTE_SEARCH_TOOL": {
+      "filter": {
+        "@eq": {
+          "CLAIM_ID": "1234"
+        }
+      },
+      "id_column": "CLAIM_ID",
+      "max_results": 4,
+      "name": "RISKFREE.CLAIM.CLAIM_NOTE_SEARCH",
+      "title_column": "POLICY_NUMBER"
+    }
+  }
+}

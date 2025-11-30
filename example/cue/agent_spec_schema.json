@@ -1,0 +1,220 @@
+{
+  "type": "object",
+  "properties": {
+    "experimental": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "instructions": {
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "orchestration": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "response": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "sample_questions": {
+          "type": "array",
+          "items": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "properties": {
+              "question": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "system": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "models": {
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "orchestration": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "orchestration": {
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "budget": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "seconds": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            },
+            "tokens": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "tool_resources": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "tool_unable_to_answer": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "tool_spec": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "required": [
+              "type",
+              "name",
+              "input_schema"
+            ],
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "input_schema": {
+                "type": [
+                  "null",
+                  "object"
+                ],
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "description": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "items": {
+                    "type": [
+                      "null",
+                      "object"
+                    ],
+                    "properties": {
+                      "description": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "type": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "properties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": [
+                        "null",
+                        "object"
+                      ],
+                      "properties": {
+                        "description": {
+                          "type": [
+                            "null",
+                            "string"
+                          ]
+                        },
+                        "type": {
+                          "type": [
+                            "null",
+                            "string"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "type": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

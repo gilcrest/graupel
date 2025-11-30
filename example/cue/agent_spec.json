@@ -1,0 +1,107 @@
+{
+  "models": {
+    "orchestration": "llama3.1-70B"
+  },
+  "experimental": {
+    "foo": "bar",
+    "nested": {
+      "key": "value"
+    }
+  },
+  "orchestration": {
+    "budget": {
+      "seconds": 30,
+      "tokens": 16000
+    }
+  },
+  "instructions": {
+    "response": "You will respond in a friendly but concise manner",
+    "orchestration": "For any revenue question use Analyst; for policy use Search",
+    "system": "You are a friendly agent.",
+    "sample_questions": [
+      {
+        "question": "question 1"
+      },
+      {
+        "question": "question 2"
+      },
+      {
+        "question": "question 3"
+      }
+    ]
+  },
+  "tools": [
+    {
+      "tool_spec": {
+        "type": "cortex_analyst_text_to_sql",
+        "name": "Analyst1",
+        "description": "test"
+      }
+    },
+    {
+      "tool_spec": {
+        "type": "cortex_analyst_sql_exec",
+        "name": "SQL_exec1"
+      }
+    },
+    {
+      "tool_spec": {
+        "type": "cortex_search",
+        "name": "Search1"
+      }
+    },
+    {
+      "tool_spec": {
+        "type": "web_search",
+        "name": "web_search_1"
+      }
+    },
+    {
+      "tool_spec": {
+        "type": "generic",
+        "name": "get_weather",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city and state"
+            }
+          },
+          "required": [
+            "Location"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_unable_to_answer": "I don't know the answer to that",
+  "tool_resources": {
+    "Analyst1": {
+      "semantic_model_file": "stage1"
+    },
+    "Analyst2": {
+      "semantic_view": "db.schema.semantic_view"
+    },
+    "Search1": {
+      "name": "db.schema.service_name",
+      "Max_results": "5",
+      "filter": {
+        "@eq": {
+          "region": "North America"
+        }
+      },
+      "Title_column": "<title_name>",
+      "ID_column": "<column_name>"
+    },
+    "SQL_exec1": {
+      "Name": "my_warehouse",
+      "Timeout": "30",
+      "AutoExecute": "true"
+    },
+    "web_search": {
+      "name": "web_search_1",
+      "Function": "db/schema/search_web"
+    }
+  }
+}
