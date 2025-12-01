@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/gilcrest/graupel"
 	"github.com/kelseyhightower/envconfig"
@@ -38,9 +37,9 @@ func main() {
 	// List all Cortex Agents
 	var (
 		agents []*graupel.CortexAgent
-		resp   *http.Response
+		resp   *graupel.Response
 	)
-	agents, resp, err = client.Agents.List(ctx, "snowflake_intelligence", "agents")
+	agents, resp, err = client.Agents.List(ctx, "snowflake_intelligence", "agents", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
