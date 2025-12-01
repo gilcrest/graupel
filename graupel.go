@@ -9,8 +9,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 	"sync"
+
+	"github.com/google/go-querystring/query"
 )
 
 const (
@@ -21,6 +24,29 @@ const (
 )
 
 var errNonNilContext = errors.New("context must be non-nil")
+
+// addOptions adds the parameters in opts as URL query parameters to s.
+// opts must be a struct whose fields may contain "url" tags.
+func addOptions(s string, opts any) (string, error) {
+	v := reflect.ValueOf(opts)
+	if v.Kind() == reflect.Pointer && v.IsNil() {
+		return s, nil
+	}
+
+	u, err := url.Parse(s)
+	if err != nil {
+		return s, err
+	}
+
+	var qs url.Values
+	qs, err = query.Values(opts)
+	if err != nil {
+		return s, err
+	}
+
+	u.RawQuery = qs.Encode()
+	return u.String(), nil
+}
 
 // NewClient returns a new Snowflake Cortex API client. If a nil httpClient is
 // provided, a new http.Client will be used. o use API methods which require
@@ -295,19 +321,26 @@ type Response struct {
 // The provided ctx must be non-nil, if it is nil an error is returned. If it is
 // canceled or times out, ctx.Err() will be returned.
 func (c *Client) bareDo(ctx context.Context, caller *http.Client, req *http.Request) (*Response, error) {
+
 	if ctx == nil {
 		return nil, errNonNilContext
 	}
 
 	req = req.WithContext(ctx)
 
+	if req == nil {
+		return nil, fmt.Errorf("request must be non-nil")
+	}
+
 	resp, err := caller.Do(req)
+
 	var response *Response
 	if resp != nil {
 		response = newResponse(resp)
 	}
 
 	if err != nil {
+
 		// If we got an error, and the context has been canceled,
 		// the context's error is probably more useful.
 		select {
@@ -368,7 +401,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v any) (*Response, e
 	switch v := v.(type) {
 	case nil:
 	case io.Writer:
-		// TODO - check if v2 JSON package allows streaming decode to io.Writer directly
+		// TODO - @gilcrest - check if v2 JSON package allows streaming decode to io.Writer directly
 
 		_, err = io.Copy(v, resp.Body)
 	default:
