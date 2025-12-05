@@ -79,6 +79,9 @@ func main() {
 
 	var mjs []byte
 	mjs, err = js.MarshalJSON()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	schemaOutfile := rootName + "_schema.json"
 	err = os.WriteFile(schemaOutfile, mjs, 0644)
