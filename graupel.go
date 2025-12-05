@@ -365,7 +365,6 @@ func (c *Client) bareDo(ctx context.Context, caller *http.Client, req *http.Requ
 	if err != nil {
 		defer resp.Body.Close()
 		return nil, err
-
 	}
 
 	return response, err
