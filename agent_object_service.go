@@ -99,11 +99,11 @@ func (s *AgentObjectService) Describe(ctx context.Context, database, schema, nam
 		return nil, nil, err
 	}
 
-	// CortexAgent instance to hold the response
-	dar := new(DescribeAgentResponse)
-
-	var resp *Response
-	resp, err = s.client.Do(ctx, req, dar)
+	var (
+		resp *Response
+		dar  *DescribeAgentResponse
+	)
+	resp, err = s.client.Do(ctx, req, &dar)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -178,6 +178,38 @@ type CreateOptions struct {
 	CreateMode string `url:"createMode,omitempty"`
 }
 
+type CreateRequest struct {
+	// The database name where the agent is located.
+	DatabaseName *string `json:"database_name,omitempty"`
+
+	// The schema name where the agent is located.
+	SchemaName *string `json:"schema_name,omitempty"`
+
+	// The name of the agent.
+	Name *string `json:"name"`
+
+	// The comment or description for the agent.
+	Comment *string `json:"comment,omitempty"`
+
+	// Profile information for the agent.
+	Profile *AgentProfile `json:"profile,omitempty"`
+
+	// Model to use for orchestration. If not provided, a model is automatically selected.
+	Models *ModelConfig `json:"models,omitempty"`
+
+	// AgentInstructions contains the various instruction types for the agent.
+	Instructions *AgentInstructions `json:"instructions,omitempty"`
+
+	// Orchestration configuration for the agent - currently only budget is supported.
+	Orchestration *OrchestrationConfig `json:"orchestration,omitempty"`
+
+	// List of tools available to the agent.
+	Tools []*Tool `json:"tools,omitempty"`
+
+	// Configuration for each tool used by the agent.
+	ToolResources map[string]any `json:"tool_resources,omitempty"`
+}
+
 type CreateResponse struct {
 	Status string `json:"status"`
 }
@@ -225,7 +257,8 @@ func (s *AgentObjectService) Create(ctx context.Context, agent *CortexAgent, opt
 		resp *Response
 		cr   *CreateResponse
 	)
-	resp, err = s.client.Do(ctx, req, cr)
+
+	resp, err = s.client.Do(ctx, req, &cr)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -292,7 +325,7 @@ func (s *AgentObjectService) Delete(ctx context.Context, database, schema, name 
 		resp *Response
 		dr   *DeleteResponse
 	)
-	resp, err = s.client.Do(ctx, req, dr)
+	resp, err = s.client.Do(ctx, req, &dr)
 	if err != nil {
 		return nil, nil, err
 	}
