@@ -42,7 +42,7 @@ import "time"
 	tool_resources?: {[string]: null | #ToolResource} @go(ToolResources,map[string]*ToolResource)
 
 	// Complete YAML specification for the agent?
-	agent_spec?: null | string @go(AgentSpec,*string)
+	agent_spec?: null | string @go(AgentSpecStr,*string)
 
 	// Timestamp when the agent was created.
 	created_on?: time.Time @go(CreatedOn)
